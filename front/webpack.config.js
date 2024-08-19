@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -8,6 +9,8 @@ const stylesHandler = 'style-loader';
 const d_root = (...args) => path.resolve(__dirname, ...args);
 const d_src = (...args) => d_root('src', ...args);
 const d_dist = (...args) => d_root('dist', ...args);
+const d_components = (...args) => d_src('components', ...args);
+const d_methodes = (...args) => d_src('methodes', ...args);
 
 const config = {
   entry: d_src('index.tsx'), // Entry file for React
@@ -24,7 +27,8 @@ const config = {
     new HtmlWebpackPlugin({
       template: d_src('index.html'),
       filename: 'index.html'
-    })
+    }),
+    new Dotenv(),
   ],
   module: {
     rules: [
@@ -48,6 +52,8 @@ const config = {
     alias:{
       root: d_root(),
       src: d_src(),
+      components: d_components(),
+      methodes: d_methodes(),
     }
   },
   mode: isProduction ? 'production' : 'development',

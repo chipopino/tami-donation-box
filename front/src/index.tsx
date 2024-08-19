@@ -1,22 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { get, post } from 'src/fetch';
-import Button from '@mui/material/Button';
-import './index.css';
+import Title from 'components/Title';
+import ToggleLeds from 'components/ToggleLeds';
+import SubmitGiff from 'components/SubmitGiff';
+import 'src/index.css';
 
 const App: React.FC = () => {
-  useEffect(() => {
-    get('/')
-      .then(res => console.log(res))
-    post('/test', { test: 'test' })
-      .then(res => console.log(res))
-  }, [])
-  return <>
-    <div className='p-8'>Hello, world!</div>
-    <Button variant="contained" color="primary">
-      MUI Button
-    </Button>
-  </>
+
+  return <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-8">
+    <Title/>
+    <ToggleLeds/>
+    <SubmitGiff />
+  </div>
 };
 
 //@ts-ignore
