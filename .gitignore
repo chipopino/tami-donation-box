@@ -2,3 +2,5 @@
 **/.env
 **/dist
 **/gifs
+venv
+**/venv
