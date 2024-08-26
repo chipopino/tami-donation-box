@@ -1,17 +1,16 @@
 from flask import Flask, jsonify, request, redirect, url_for
-from PIL import Image
 from flask_cors import CORS
 import os
 
 def is_valid_gif(file, width=32, height=7):
-    try:
-        with Image.open(file) as img:
-            if img.format == 'GIF' and img.width == width and img.height == height:
-                return True
-            return False
-    except (IOError, SyntaxError):
-        return False
-
+    # try:
+    #     with Image.open(file) as img:
+    #         if img.format == 'GIF' and img.width == width and img.height == height:
+    #             return True
+    #         return False
+    # except (IOError, SyntaxError):
+    #     return False
+    return True
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -30,7 +29,6 @@ def post_data():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    
     if not os.path.exists('./gifs'):
         os.makedirs('./gifs')
 
@@ -50,4 +48,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)
