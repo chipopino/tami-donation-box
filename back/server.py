@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, redirect, url_for
+from flask import Flask, jsonify, request, redirect, url_for, send_from_directory
 from flask_cors import CORS
 import os
 
@@ -19,6 +19,14 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 @app.route('/toggleLeds')
 def turnOn():
     return jsonify('success')
+
+@app.route('/getGifNames')
+def getGiffs():
+    return jsonify(os.listdir('./gifs'))
+
+@app.route('/gifs/<path:filename>')
+def gifs(filename):
+    return send_from_directory('./gifs', filename)
 
 
 @app.route('/test', methods=['POST'])
@@ -42,7 +50,8 @@ def upload_file():
     if not is_valid_gif(file):
         return 'Invalid GIF file', 400
 
-    file.save(f'./gifs/{file.filename}')
+    fin = file.filename.replace(' ', '')
+    file.save(f'./gifs/{fin}')
     return 'File uploaded successfully!'
 
 
