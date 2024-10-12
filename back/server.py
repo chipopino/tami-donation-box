@@ -22,11 +22,11 @@ def turnOn():
 
 @app.route('/getGifNames')
 def getGiffs():
-    return jsonify(os.listdir('./gifs'))
+    return jsonify(os.listdir('/mnt/gifs/gifs'))
 
 @app.route('/gifs/<path:filename>')
 def gifs(filename):
-    return send_from_directory('./gifs', filename)
+    return send_from_directory('/mnt/gifs/gifs', filename)
 
 
 @app.route('/test', methods=['POST'])
@@ -54,6 +54,9 @@ def upload_file():
     file.save(f'./gifs/{fin}')
     return 'File uploaded successfully!'
 
+@app.route('/<path:filename>')
+def front(filename):
+    return send_from_directory('../front/dist/', filename)
 
 
 if __name__ == '__main__':
