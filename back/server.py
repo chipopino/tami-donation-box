@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, redirect, url_for, send_from_director
 from flask_cors import CORS
 import os
 
+P_GIFS = '/mnt/gifs/gifs'
+
 def is_valid_gif(file, width=32, height=7):
     # try:
     #     with Image.open(file) as img:
@@ -22,11 +24,11 @@ def turnOn():
 
 @app.route('/getGifNames')
 def getGiffs():
-    return jsonify(os.listdir('/mnt/gifs/gifs'))
+    return jsonify(os.listdir(P_GIFS))
 
 @app.route('/gifs/<path:filename>')
 def gifs(filename):
-    return send_from_directory('/mnt/gifs/gifs', filename)
+    return send_from_directory(P_GIFS, filename)
 
 
 @app.route('/test', methods=['POST'])
@@ -37,8 +39,8 @@ def post_data():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if not os.path.exists('./gifs'):
-        os.makedirs('./gifs')
+    if not os.path.exists(P_GIFS):
+        os.makedirs(P_GIFS)
 
     if 'file' not in request.files:
         return redirect(request.url)
@@ -51,7 +53,7 @@ def upload_file():
         return 'Invalid GIF file', 400
 
     fin = file.filename.replace(' ', '')
-    file.save(f'./gifs/{fin}')
+    file.save(f'{P_GIFS}/{fin}')
     return 'File uploaded successfully!'
 
 @app.route('/<path:filename>')
