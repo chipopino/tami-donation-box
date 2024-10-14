@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, redirect, url_for, send_from_directory
+from flask import Flask, abort, jsonify, request, redirect, url_for, send_from_directory
 from flask_cors import CORS
 import os
 
@@ -18,6 +18,11 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 
+@app.route('/test', methods=['POST'])
+def post_data():
+    data = request.json
+    return jsonify(data)  
+
 @app.route('/toggleLeds')
 def turnOn():
     return jsonify('success')
@@ -30,13 +35,22 @@ def getGiffs():
 def gifs(filename):
     return send_from_directory(P_GIFS, filename)
 
-
-@app.route('/test', methods=['POST'])
-def post_data():
-    data = request.json  # Get JSON data from the request
-    return jsonify(data)  # Echo the received data back
-
-
+@app.route('/deleteGif/<path:filename>')
+def deleteGif(filename):
+    file = os.path.join(P_GIFS, filename)
+    try:
+        os.remove(file)
+        return {}
+    except FileNotFoundError:
+        print(f'File "{file}" not found')
+        abort(500, description=f'File "{file}" not found')
+    except PermissionError:
+        print(f'Permission to delete "{file}" denied')
+        abort(500, description=f'Permission to delete "{file}" denied')
+    except Exception as e:
+        print(f'An error occurred while deleting "{file}": {e}')    
+        abort(500, description=f'An error occurred while deleting "{file}": {e}')
+    
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if not os.path.exists(P_GIFS):
@@ -53,7 +67,7 @@ def upload_file():
         return 'Invalid GIF file', 400
 
     fin = file.filename.replace(' ', '')
-    file.save(f'{P_GIFS}/{fin}')
+    file.save(os.path.join(P_GIFS, fin))
     return 'File uploaded successfully!'
 
 @app.route('/<path:filename>')
