@@ -4,9 +4,9 @@ import time
 import re
 
 LED_COUNT = 3
-LED_PIN = 18   
+LED_PIN = 12   
 TIME_PER_GIF_IN_SEC = 10
-MIN_ALLOWED_DELAY_PER_GIF = 0.01
+MIN_ALLOWED_DELAY_PER_FRAME = 0.01
 
 def clear_strip(strip):
     for i in range(strip.numPixels()):
@@ -45,11 +45,11 @@ def playGif(fileName):
     strip = PixelStrip(LED_COUNT, LED_PIN)
     start_time = time.time()
     
-    delay = 0.1
+    delay = MIN_ALLOWED_DELAY_PER_FRAME
     try:
-        delay = float(re.search(r'(?<=__)\d(\.\d+?)?(?=__)', fileName).group())
-        if delay < MIN_ALLOWED_DELAY_PER_GIF:
-            delay = MIN_ALLOWED_DELAY_PER_GIF
+        d = float(re.search(r'(?<=__)\d(\.\d+?)?(?=__)', fileName).group())
+        if d >= MIN_ALLOWED_DELAY_PER_FRAME:
+            delay = d
     except Exception as e:
         print(e)
         pass
@@ -69,11 +69,11 @@ def playGif(fileName):
     
 if __name__ == '__main__':
     try:
-        strip = PixelStrip(LED_COUNT, LED_PIN)
+        #strip = PixelStrip(LED_COUNT, LED_PIN)
         #strip.begin()  # Initialize the strip
-        #strip.setPixelColor(0, Color(0, 255, 0))
+        #strip.setPixelColor(0, Color(0, 255, 255))
         #strip.show()
-        print("LED strip initialized successfully.")
-        #playGif('/mnt/gifs/gifs/NewPiskel__0.01__.gif')
-    except Exception as e:
+        #print("LED strip initialized successfully.")
+        playGif('/mnt/gifs/gifs/NewPiskel.gif')
+    except Exception as e:  
         print("AAAAAAAAAAAAAAAA", e)
