@@ -10,8 +10,6 @@ export default function SubmitGiff() {
     encType="multipart/form-data"
   >
     <label className='w-fit'>upload 32x7 giff</label>
-    <label className='w-fit mb-1'>(first frame is ignored)</label>
-
     <div className='flex flex-wrap items-center justify-center gap-2'>
       <input type="file" name="file" />
       <Btn type="submit">Submit</Btn>
