@@ -1,3 +1,5 @@
+# dont edit
+
 import pygame
 from PIL import Image
 from editme import main
