@@ -1,5 +1,9 @@
 # pygame - a pygame class instance you can use to draw shapes and just use it as you would in any pygame application, read the pygame docs or tutorials
-# render - ONE RENDER IS ONE GIF FRAME, call this function like this: render(isExport) to render the scene, ignore isExport
+# render(delay, isExport) - 
+#   ONE RENDER IS ONE GIF FRAME, 
+#   call this function like this: render(<delay in milliseconds>, isExport) to render the scene, 
+#   the delay is the number of milliseconds the animation while halt untill the next frame
+#   ignore isExport  
 # drawPixel((x,y), (r,g,b)) - fill a pixel with color
 # drawText(str, (x,y), (r,g,b)) - draw text
 # marquee(str, (r,g,b), sep, isExport) - animating text from right to left in a loop, sep is the width between the reappearing text, ignore isExport 
@@ -13,6 +17,6 @@ def main(pygame, render, drawPixel, drawText, marquee, clear, surface, width, he
     #for y in range(height):
     #    for x in range(width):
     #        drawPixel((x,y), (240,0,0))
-    #        render(17, isExport)
+    #        render(20, isExport)
     
     marquee('Tami is DA BEST !!! <3 <3 <3', (0,250,0), 4, isExport, 70)
