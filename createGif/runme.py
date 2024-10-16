@@ -6,6 +6,7 @@ import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import importlib
+from time import sleep
 
 WIDTH = 32
 HEIGHT = 7
@@ -19,6 +20,7 @@ running = True
 restart = False
 clock = pygame.time.Clock()
 surface32x7 = pygame.Surface((WIDTH, HEIGHT))
+font = pygame.font.Font('./MatrixChunky6X.ttf', 7)  # Default font, size 36
 
 screen.fill((0, 0, 0)) 
 surface32x7.fill((0, 0, 0)) 
@@ -26,6 +28,23 @@ surface32x7.fill((0, 0, 0))
 def drawPixel(position, color):
     surface32x7.set_at(position, color)
 
+def clear():
+    surface32x7.fill((0, 0, 0))
+    
+def drawText(text, pos, color):
+    text = font.render(text, True, color)
+    surface32x7.blit(text, pos)
+    return text.get_width()
+
+def marquee(text, color, sep, isExport):
+    twidth = drawText(text, (0,0), color)
+    for i in range(twidth + sep):
+        drawText(text, (-i,0), color)
+        drawText(text, (twidth+sep-i,0), color)
+        render(isExport)
+        clear()
+        sleep(0.05)
+         
 def render(isExport=False):
     if running and not restart:
         scaled_surface = pygame.transform.scale(surface32x7, dspSize)
@@ -39,7 +58,7 @@ def render(isExport=False):
         clock.tick(60) 
 
 def export():
-    main(pygame, render, drawPixel, surface32x7, 32, 7, True)
+    main(pygame, render, drawPixel, drawText, marquee, clear, surface32x7, 32, 7, True)
     frames[0].save('animation__0.1__.gif', save_all=True, append_images=frames[1:], duration=20, loop=0)
     pygame.quit()
 
@@ -74,7 +93,7 @@ if __name__ == '__main__':
     while running:
         surface32x7.fill((0, 0, 0))
         try:
-            main(pygame, render, drawPixel, surface32x7, 32, 7, False)
+            main(pygame, render, drawPixel, drawText, marquee, clear, surface32x7, 32, 7, False)
         except Exception as e:
             print(e)
         restart = False
