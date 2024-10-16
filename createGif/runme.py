@@ -1,19 +1,22 @@
-# dont edit
-
+# only edit SCALE_FACTOR to make screen smaller or bigger
 import pygame
 from PIL import Image
 from editme import main
 import threading
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import importlib
 
 WIDTH = 32
 HEIGHT = 7
-SCALE_FACTOR = 30
-
+SCALE_FACTOR = 20
+        
 pygame.init()
 dspSize = (WIDTH * SCALE_FACTOR, HEIGHT * SCALE_FACTOR)
 screen = pygame.display.set_mode(dspSize)
 frames = []
 running = True
+restart = False
 clock = pygame.time.Clock()
 surface32x7 = pygame.Surface((WIDTH, HEIGHT))
 
@@ -24,7 +27,7 @@ def drawPixel(position, color):
     surface32x7.set_at(position, color)
 
 def render(isExport=False):
-    if running:
+    if running and not restart:
         scaled_surface = pygame.transform.scale(surface32x7, dspSize)
         screen.blit(scaled_surface, (0, 0))  
         pygame.display.flip()
@@ -49,12 +52,34 @@ def handle_events():
                 
 if __name__ == '__main__':
     
+    class MyHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            try:
+                global main
+                global restart
+                import editme
+                importlib.reload(editme)
+                restart = True
+                main = editme.main
+            except Exception as e:
+                print(e)
+                
+    observer = Observer()
+    observer.schedule(MyHandler(), path="./editme.py", recursive=False)
+    observer.start()
+
     event_thread = threading.Thread(target=handle_events)
     event_thread.start()
 
     while running:
-        surface32x7.fill((0, 0, 0)) 
-        main(pygame, render, drawPixel, surface32x7, 32, 7, False)
-        
+        surface32x7.fill((0, 0, 0))
+        try:
+            main(pygame, render, drawPixel, surface32x7, 32, 7, False)
+        except Exception as e:
+            print(e)
+        restart = False
+    
     event_thread.join()
+    observer.stop()
+    observer.join()
     pygame.quit()
