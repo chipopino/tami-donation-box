@@ -14,9 +14,23 @@
 
 def main(pygame, render, drawPixel, drawText, marquee, clear, surface, width, height, isExport):
     
+    # ~~ simple example ~~
     #for y in range(height):
     #    for x in range(width):
     #        drawPixel((x,y), (240,0,0))
     #        render(20, isExport)
     
+    # ~~ coins ~~
+    # for x in range(75):
+    #     clear()
+    #     pygame.draw.polygon(surface, (0,250,0), [(x-5,0), (x-5,6), (3+x-5,3)])
+        
+    #     for c in range(4):
+    #         pygame.draw.circle(surface, (250,250,0), (-10+x-c*9,3), 3)
+        
+    #     render(40, isExport)
+        
+    # ~~ marquee ~~
     marquee('Tami is DA BEST !!! <3 <3 <3', (0,250,0), 4, isExport, 70)
+    
+
