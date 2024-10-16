@@ -16,6 +16,7 @@ pygame.init()
 dspSize = (WIDTH * SCALE_FACTOR, HEIGHT * SCALE_FACTOR)
 screen = pygame.display.set_mode(dspSize)
 frames = []
+durations = []
 running = True
 restart = False
 clock = pygame.time.Clock()
@@ -25,27 +26,9 @@ font = pygame.font.Font('./MatrixChunky6X.ttf', 7)  # Default font, size 36
 screen.fill((0, 0, 0)) 
 surface32x7.fill((0, 0, 0)) 
 
-def drawPixel(position, color):
-    surface32x7.set_at(position, color)
 
-def clear():
-    surface32x7.fill((0, 0, 0))
-    
-def drawText(text, pos, color):
-    text = font.render(text, True, color)
-    surface32x7.blit(text, pos)
-    return text.get_width()
-
-def marquee(text, color, sep, isExport):
-    twidth = drawText(text, (0,0), color)
-    for i in range(twidth + sep):
-        drawText(text, (-i,0), color)
-        drawText(text, (twidth+sep-i,0), color)
-        render(isExport)
-        clear()
-        sleep(0.05)
-         
-def render(isExport=False):
+def render(delay=20, isExport=False):
+    d = delay if delay >= 20 else 20
     if running and not restart:
         scaled_surface = pygame.transform.scale(surface32x7, dspSize)
         screen.blit(scaled_surface, (0, 0))  
@@ -54,20 +37,43 @@ def render(isExport=False):
         if isExport:
             frame_data = pygame.surfarray.array3d(surface32x7)
             frames.append(Image.fromarray(frame_data.transpose(1, 0, 2))) 
+            durations.append(d)
         
-        clock.tick(60) 
+        clock.tick(1000/d) 
 
-def export():
-    main(pygame, render, drawPixel, drawText, marquee, clear, surface32x7, 32, 7, True)
-    frames[0].save('animation__0.1__.gif', save_all=True, append_images=frames[1:], duration=20, loop=0)
-    pygame.quit()
 
+def clear():
+    surface32x7.fill((0, 0, 0))
+        
+def drawPixel(position, color):
+    surface32x7.set_at(position, color)
+
+def drawText(text, pos, color):
+    text = font.render(text, True, color)
+    surface32x7.blit(text, pos)
+    return text.get_width()
+
+def marquee(text, color, sep, isExport, delay=20):
+    twidth = drawText(text, (0,0), color)
+    for i in range(twidth + sep):
+        drawText(text, (-i,0), color)
+        drawText(text, (twidth+sep-i,0), color)
+        render(delay, isExport)
+        clear()
+         
+         
 def handle_events():
     global running
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+def export():
+    main(pygame, render, drawPixel, drawText, marquee, clear, surface32x7, 32, 7, True)
+    frames[0].save('animation.gif', save_all=True, append_images=frames[1:], duration=durations, loop=0)
+    pygame.quit()    
+     
                 
 if __name__ == '__main__':
     

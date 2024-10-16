@@ -13,6 +13,6 @@ def main(pygame, render, drawPixel, drawText, marquee, clear, surface, width, he
     #for y in range(height):
     #    for x in range(width):
     #        drawPixel((x,y), (240,0,0))
-    #        render(isExport)
+    #        render(17, isExport)
     
-    marquee('Tami is DA BEST !!! <3 <3 <3', (0,250,0), 4, isExport)
+    marquee('Tami is DA BEST !!! <3 <3 <3', (0,250,0), 4, isExport, 70)
