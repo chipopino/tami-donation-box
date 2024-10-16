@@ -17,3 +17,8 @@ python3 export.py
 change the __0.1__ part of the exported gif name to other numbers, this is the time in seconds that is added to each frame as a delay, so small numbers result in a faster animation
 
 upload the resulting gif to ipOfTheRaspbarrypi/index.html
+
+## important
+try to minimize the uploading or deletion of gifs to the raspbarrypi server.  
+the pis os is on a read only partition, so is the partition to which the gifs are uploaded, when a gif is uploaded or deleted, it first remounts the fs as read+write and after changes back to read only. this is to prevent corruption on sudden power loss.  
+so to avoid damage from manny fs remounts, minimize upload or delete of gifs.
